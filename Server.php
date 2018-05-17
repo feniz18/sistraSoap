@@ -3,32 +3,20 @@
 
 	require_once("lib/nusoap.php");
 
-	include("Funciones.php");
+	
+	require 'Funciones.php';
 
 	$server = new soap_server();
 
-	$ns = "http://localhost/SISTRASOAP/Server.php";
+	$server->configureWSDL("sistraServicio",'urn:sistraServicioWdsl');
 
-	$server->configureWSDL("sistraServicio",$ns);
+	$server->soap_defencoding = 'UTF-8';
 
-	$server->wsdl->schematargetnamespace = $ns;
-
-	$server->register
-		("calculadora",
-			array
-			(
-				'num1' => 'xsd:int',
-				'num2' => 'xsd:int',
-				'op' => 'xsd:String',
-			),
-			array
-			(
-				'return' => 'xsd:int',
-			),
-			$ns
-		);
+	$server->register("calculadora",array('num1' => 'xsd:int','num2' => 'xsd:int','op' => 'xsd:String',),array('return' => 'xsd:int',),'urn:sistraServicioWdsl');
 
 	$postdate = file_get_contents("php://input");
 
 	$server->service($postdate);
+	
+	
  ?>
